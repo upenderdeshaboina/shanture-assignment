@@ -30,7 +30,7 @@ app.get('/tasks', (req, res) => {
 });
 
 app.post('/tasks', (req, res) => {
-  const { description } = req.body;
+  const { name } = req.body;
   db.run("INSERT INTO tasks (description) VALUES (?)", [description], function(err) {
     if (err) {
       res.status(500).send(err.message);
@@ -50,6 +50,20 @@ app.delete('/tasks/:id', (req, res) => {
     }
   });
 });
+
+app.patch('/tasks/:id', (req, res) => {
+    const { id } = req.params;
+    const { completed } = req.body;
+    db.run("UPDATE tasks SET completed = ? WHERE id = ?", [completed, id], function (err) {
+      if (err) {
+        res.status(500).send(err.message);
+      } else if (this.changes === 0) {
+        res.status(404).send('Task not found');
+      } else {
+        res.json({ id, completed });
+      }
+    });
+  });
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
