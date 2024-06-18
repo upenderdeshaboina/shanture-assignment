@@ -6,13 +6,11 @@ const path = require('path');
 const app = express();
 const port = 4000;
 
-// Use a persistent SQLite database file
 const db = new sqlite3.Database(path.resolve(__dirname, 'tasks.db'));
 
 app.use(cors());
 app.use(express.json());
 
-// Initialize the database and create the tasks table if it doesn't exist
 db.run(`CREATE TABLE IF NOT EXISTS tasks (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   description TEXT,
